@@ -120,8 +120,7 @@ func cronfunc() {
 
 func main() {
 	InitialTries = 0
-	currentIP := getIP()
-	if currentIP == "" {
+	if getIP() == "" {
 		HasIP = false
 	} else {
 		HasIP = true
@@ -129,11 +128,16 @@ func main() {
 	// c := cron.New()
 	// c.AddFunc("0 * * * * *", func() { cronfunc() })
 	// c.Start()
+
 	go func() {
+
 		c := time.Tick(1 * time.Second)
+
 		for range c {
 			cronfunc()
 		}
+
 	}()
+
 	time.Sleep(30 * time.Second)
 }
