@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"os/signal"
 	"regexp"
 	"strings"
 
@@ -127,8 +128,11 @@ func main() {
 		HasIP = true
 	}
 	c := cron.New()
-	c.AddFunc("0 * * * * *", func() { cronfunc })
-	c.Start()
+	c.AddFunc("0 * * * * *", cronfunc)
+	go c.Start()
+	sig := make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt, os.Kill)
+	<-sig
 
 	// go func() {
 	//
