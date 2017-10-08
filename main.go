@@ -131,7 +131,7 @@ func main() {
 
 	go func() {
 
-		c := time.Tick(30 * time.Second)
+		c := time.Tick(1 * time.Second)
 
 		for range c {
 			cronfunc()
@@ -139,4 +139,5 @@ func main() {
 
 	}()
 
+	time.Sleep(30 * time.Second)
 }
