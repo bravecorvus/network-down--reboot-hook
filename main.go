@@ -88,6 +88,7 @@ func reboot() {
 func main() {
 	c := cron.New()
 	c.AddFunc("0 * * * * *", func() {
+		fmt.Println(getIP())
 		if getIP() == "" {
 			// reboot()
 			fmt.Println("NOTHING IN PARAMETERS")
