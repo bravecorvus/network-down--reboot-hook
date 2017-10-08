@@ -8,13 +8,9 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+
 	"github.com/robfig/cron"
 )
-
-
-cmdName := "reboot"
-cmdArgs := []string{"-n"}
-
 
 func call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
 	if stack[0].Process == nil {
@@ -80,6 +76,8 @@ func getIP() string {
 }
 
 func reboot() {
+	cmdName := "reboot"
+	cmdArgs := []string{"-n"}
 	cmd := exec.Command(cmdName, cmdArgs...)
 	err := cmd.Start()
 	if err != nil {
@@ -87,10 +85,7 @@ func reboot() {
 	}
 }
 
-
 func main() {
-	t := time.Now()
-	currenttime := t.Format("15:04")
 	c := cron.New()
 	c.AddFunc("0 * * * * *", func() {
 		if getIP() == "" {
