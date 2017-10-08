@@ -127,7 +127,7 @@ func main() {
 		HasIP = true
 	}
 	c := cron.New()
-	c.AddFunc("0 * * * * *", func() { cronfunc() })
+	c.AddFunc("0 * * * * *", func() { cronfunc })
 	c.Start()
 
 	// go func() {
