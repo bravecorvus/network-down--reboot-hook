@@ -85,20 +85,20 @@ func reboot() {
 	}
 }
 
+func cronfunc() {
+	fmt.Println(getIP())
+	if getIP() == "" {
+		// reboot()
+		fmt.Println("NOTHING IN PARAMETERS")
+	} else {
+		fmt.Println("WE GOT AN ADDRESS AT PARAMETERS " + getIP())
+	}
+
+}
+
 func main() {
 	fmt.Println(getIP())
 	c := cron.New()
-	c.AddFunc("0 * * * * *", func() {
-		fmt.Println(getIP())
-		if getIP() == "" {
-			// reboot()
-			fmt.Println("NOTHING IN PARAMETERS")
-		} else {
-			fmt.Println("WE GOT AN ADDRESS AT PARAMETERS " + getIP())
-		}
-	})
-	done := make(chan bool)
-	go c.Start()
-	<-done
-
+	c.AddFunc("0 * * * * *", func() { cronfunc() })
+	c.Start()
 }
