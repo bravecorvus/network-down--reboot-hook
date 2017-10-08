@@ -98,5 +98,5 @@ func main() {
 		}
 	})
 	c.Start()
-
+	c.Stop()
 }
