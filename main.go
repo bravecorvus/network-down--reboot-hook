@@ -9,7 +9,8 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
-	"time"
+
+	"github.com/robfig/cron"
 	// "github.com/robfig/cron"
 )
 
@@ -125,19 +126,19 @@ func main() {
 	} else {
 		HasIP = true
 	}
-	// c := cron.New()
-	// c.AddFunc("0 * * * * *", func() { cronfunc() })
-	// c.Start()
+	c := cron.New()
+	c.AddFunc("0 * * * * *", func() { cronfunc() })
+	c.Start()
 
-	go func() {
-
-		c := time.Tick(1 * time.Second)
-
-		for range c {
-			cronfunc()
-		}
-
-		time.Sleep(30 * time.Second)
-	}()
-
+	// go func() {
+	//
+	//     c := time.Tick(1 * time.Second)
+	//
+	//     for range c {
+	//         cronfunc()
+	//     }
+	//
+	// }()
+	//
+	// time.Sleep(30 * time.Second)
 }
