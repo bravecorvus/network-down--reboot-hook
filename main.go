@@ -89,7 +89,10 @@ func main() {
 	c := cron.New()
 	c.AddFunc("0 * * * * *", func() {
 		if getIP() == "" {
-			reboot()
+			// reboot()
+			fmt.Println("NOTHING IN PARAMETERS")
+		} else {
+			fmt.Println("WE GOT AN ADDRESS AT PARAMETERS " + getIP())
 		}
 	})
 	c.Start()
