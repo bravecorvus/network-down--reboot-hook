@@ -86,6 +86,7 @@ func reboot() {
 }
 
 func main() {
+	fmt.Println(getIP())
 	c := cron.New()
 	c.AddFunc("0 * * * * *", func() {
 		fmt.Println(getIP())
