@@ -9,8 +9,8 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
-
-	"github.com/robfig/cron"
+	"time"
+	// "github.com/robfig/cron"
 )
 
 var InitialTries int
@@ -126,8 +126,14 @@ func main() {
 	} else {
 		HasIP = true
 	}
-	fmt.Println(getIP())
-	c := cron.New()
-	c.AddFunc("0 * * * * *", func() { cronfunc() })
-	c.Start()
+	// c := cron.New()
+	// c.AddFunc("0 * * * * *", func() { cronfunc() })
+	// c.Start()
+	go func() {
+		c := time.Tick(1 * time.Second)
+		for range c {
+			cronfunc()
+		}
+	}()
+	time.Sleep(30 * time.Second)
 }
