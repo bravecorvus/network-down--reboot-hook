@@ -97,6 +97,6 @@ func main() {
 			fmt.Println("WE GOT AN ADDRESS AT PARAMETERS " + getIP())
 		}
 	})
-	c.Start()
-	c.Stop()
+	go c.Start()
+
 }
