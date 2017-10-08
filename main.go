@@ -97,6 +97,8 @@ func main() {
 			fmt.Println("WE GOT AN ADDRESS AT PARAMETERS " + getIP())
 		}
 	})
+	done := make(chan bool)
 	go c.Start()
+	<-done
 
 }
