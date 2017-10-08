@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
+	"time"
 	// "github.com/robfig/cron"
 )
 
@@ -87,6 +89,55 @@ func reboot() {
 	}
 }
 
+func cronfunc() {
+	fmt.Println("cronfunc ran")
+	currentIP := getIP()
+	// Since its in rc.local, we want the system networking to set everything up first (so give it some leway to make sure it doesn't fail just because it ran before wlan0 was ifuped)
+
+	if HasIP { // Means at one point, an IP was assigned. If an IP was assigned, and there is no IP currently, then assume DHCP screwed up and the system needs a reboot
+		if currentIP == "" {
+			reboot()
+		}
+	} else {
+		if InitialTries < 5 { // Try to wait for the networking system daemon to bring up all the interfaces before assuming failure
+			if currentIP == "" { // If its reasonable to assume the network is still ifuping wlan0 and the IP is still blank, then add 1 to the InitialTries counter
+				InitialTries += 1
+			} else { // However, it its not "" (blank), then we can assume the DHCP server assigned us a usable IP, hense, the regular operation of the program can start.
+				InitialTries = 5
+				HasIP = true
+			}
+			// After 5 tries, its safe to assume bringing up the network interface for wlan0 failed or succeeded, and waiting more will not help the situation
+		} else {
+			if currentIP == "" { // If after 5 tries, the system can't get an IP address assigned, it means something is wrong with configuration, Hence, to stop an infinite reboot loop, it will just exit the program gracefully
+				os.Exit(1)
+			} else { // If on the 5th try, we get an actual non-empty IP, then HasIP becomes true and program starts regular behavior
+				HasIP = true
+			}
+		}
+	}
+
+}
+
 func main() {
-	reboot()
+	InitialTries = 0
+	if getIP() == "" {
+		HasIP = false
+	} else {
+		HasIP = true
+	}
+	// c := cron.New()
+	// c.AddFunc("0 * * * * *", func() { cronfunc() })
+	// c.Start()
+
+	go func() {
+
+		c := time.Tick(1 * time.Second)
+
+		for range c {
+			cronfunc()
+		}
+
+	}()
+
+	time.Sleep(30 * time.Second)
 }
